@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
