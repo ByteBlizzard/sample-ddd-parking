@@ -11,10 +11,10 @@ interface Parking {
 }
 
 class ParkingImpl(
-    private val id: Plate,
-    private var checkInTime: LocalDateTime?,
-    private var lastPlayTime: LocalDateTime?,
-    private var totalPaid: Int = 0
+    val id: Plate,
+    var checkInTime: LocalDateTime? = null,
+    var lastPlayTime: LocalDateTime? = null,
+    var totalPaid: Int = 0
 ): Parking {
     override fun handle(eventQueue: EventQueue, command: CheckInCommand): Boolean {
         if (inPark()) {

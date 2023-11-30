@@ -1,0 +1,41 @@
+type Query {
+    totalInPark: Int
+    parkingHistory(plate: String): [ParkingHistory]
+    dailyRevenue: [DailyRevenue]
+}
+
+type Mutation {
+    checkIn(req: CheckInReq): Boolean
+    checkOut(req: CheckOutReq): Boolean
+    notifyPay(req: PayReq): Boolean
+}
+
+input CheckInReq {
+    plate: String
+    time: String
+}
+
+input CheckOutReq {
+    plate: String
+    time: String
+}
+
+input PayReq {
+    plate: String
+    amount: Int
+    time: String
+}
+
+type ParkingHistory {
+    plate: String
+    checkInTime: String
+    checkOutTime: String
+    payAmount: Int
+}
+
+type DailyRevenue {
+    date: String
+    revenue: Int
+}
+
+
