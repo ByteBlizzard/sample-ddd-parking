@@ -1,4 +1,4 @@
-package com.example.dddparking
+package com.example.dddparking.command
 
 import com.example.dddparking.domain.*
 import org.springframework.graphql.data.method.annotation.Argument
@@ -9,23 +9,21 @@ import java.time.LocalDateTime
 @Controller
 class NotifyPayController(
     private val notifyPayCommandHandler: NotifyPayCommandHandler,
-    private val domainEventDispatcher: DomainEventDispatcher
+    private val commandInvoker: CommandInvoker
 ) {
     @MutationMapping
     fun notifyPay(@Argument("req") req: NotifyPayReq): Boolean {
-        val eventQueue = SimpleEventQueue()
-        notifyPayCommandHandler.handle(
-            eventQueue,
-            NotifyPayCommand(
-                plate = Plate(req.plate),
-                payTime = LocalDateTime.parse(req.time),
-                amount = req.amount
+        return commandInvoker.invoke { eventQueue ->
+            notifyPayCommandHandler.handle(
+                eventQueue,
+                NotifyPayCommand(
+                    plate = Plate(req.plate),
+                    payTime = LocalDateTime.parse(req.time),
+                    amount = req.amount
+                )
             )
-        )
-
-        this.domainEventDispatcher.dispatchNow(eventQueue)
-
-        return true
+            true
+        }
     }
 }
 

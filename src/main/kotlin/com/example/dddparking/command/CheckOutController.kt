@@ -1,4 +1,4 @@
-package com.example.dddparking
+package com.example.dddparking.command
 
 import com.example.dddparking.domain.*
 import org.springframework.graphql.data.method.annotation.Argument
@@ -9,22 +9,19 @@ import java.time.LocalDateTime
 @Controller
 class CheckOutController(
     private val checkOutCommandHandler: CheckOutCommandHandler,
-    private val domainEventDispatcher: DomainEventDispatcher
+    private val commandInvoker: CommandInvoker
 ) {
     @MutationMapping
     fun checkOut(@Argument("req") req: CheckOutReq): Boolean {
-        val eventQueue = SimpleEventQueue()
-        val result = checkOutCommandHandler.handle(
-            eventQueue,
-            CheckOutCommand(
-                plate = Plate(req.plate),
-                time = LocalDateTime.parse(req.time)
+        return commandInvoker.invoke { eventQueue ->
+            checkOutCommandHandler.handle(
+                eventQueue,
+                CheckOutCommand(
+                    plate = Plate(req.plate),
+                    time = LocalDateTime.parse(req.time)
+                )
             )
-        )
-
-        this.domainEventDispatcher.dispatchNow(eventQueue)
-
-        return result
+        }
     }
 }
 
