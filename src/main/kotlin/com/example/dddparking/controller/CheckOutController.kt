@@ -1,4 +1,4 @@
-package com.example.dddparking.command
+package com.example.dddparking.controller
 
 import com.example.dddparking.domain.*
 import org.springframework.graphql.data.method.annotation.Argument

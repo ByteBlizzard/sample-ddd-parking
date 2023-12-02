@@ -1,4 +1,4 @@
-package com.example.dddparking.query
+package com.example.dddparking.controller
 
 import com.example.dddparking.db.DailyRevenueDao
 import com.example.dddparking.db.ParkingViewDao

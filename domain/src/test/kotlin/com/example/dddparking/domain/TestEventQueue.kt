@@ -7,4 +7,8 @@ class TestEventQueue: EventQueue {
     override fun enqueue(event: DomainEvent) {
         list.add(event)
     }
+
+    override fun queue(): List<DomainEvent> {
+        return list
+    }
 }

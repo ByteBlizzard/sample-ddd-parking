@@ -2,6 +2,7 @@ type Query {
     totalInPark: Int
     parkingHistory(plate: String): [ParkingHistory]
     dailyRevenue: [DailyRevenue]
+    shouldPay(req: ShouldPayReq): Int
 }
 
 type Mutation {
@@ -23,6 +24,11 @@ input CheckOutReq {
 input PayReq {
     plate: String
     amount: Int
+    time: String
+}
+
+input ShouldPayReq {
+    plate: String
     time: String
 }
 

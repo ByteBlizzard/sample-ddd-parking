@@ -10,6 +10,8 @@ interface Parking {
     fun handle(eventQueue: EventQueue, command: CheckOutCommand): Boolean
 }
 
+const val FEE_PER_HOUR = 1;
+
 class ParkingImpl(
     val id: Plate,
     var checkInTime: LocalDateTime? = null,
@@ -58,15 +60,22 @@ class ParkingImpl(
 
     override fun calculateFeeNow(now: LocalDateTime): Int {
         val currentCheckInTime = checkInTime ?: throw DomainException("车辆尚未入场")
-        val lastPayTimeCurrent = lastPlayTime ?: return hoursBetween(currentCheckInTime, now)
+        val lastPayTimeCurrent = lastPlayTime ?: return feeBetween(currentCheckInTime, now)
+        if (totalPaid < feeBetween(currentCheckInTime, lastPayTimeCurrent)) {
+            return feeBetween(currentCheckInTime, now) - totalPaid
+        }
         if (lastPayTimeCurrent.plusMinutes(15).isAfter(now)) {
             return 0
         }
 
-        return hoursBetween(currentCheckInTime, now) - totalPaid
+        return feeBetween(currentCheckInTime, now) - totalPaid
     }
 
-    fun hoursBetween(start: LocalDateTime, end: LocalDateTime): Int {
+    private fun feeBetween(start: LocalDateTime, end: LocalDateTime): Int {
+        return hoursBetween(start, end) * FEE_PER_HOUR
+    }
+
+    private fun hoursBetween(start: LocalDateTime, end: LocalDateTime): Int {
         val minutes = Duration.between(start, end).toMinutes()
         val hours = minutes / 60
         return (if (hours * 60 == minutes) hours else hours + 1).toInt()
@@ -75,5 +84,4 @@ class ParkingImpl(
     fun inPark(): Boolean {
         return checkInTime != null
     }
-
 }

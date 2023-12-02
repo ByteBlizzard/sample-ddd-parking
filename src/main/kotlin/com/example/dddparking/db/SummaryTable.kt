@@ -2,6 +2,7 @@ package com.example.dddparking.db
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.data.jpa.repository.JpaRepository
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component
  * 总停车数统计视图
  */
 @Entity
+@Table(name = "summary")
 class SummaryTable (
     @Id
     val id: Int,
